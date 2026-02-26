@@ -165,11 +165,6 @@
  
 > 如果你的目标是“只执行，不要 AI 再说一遍”，请保持 `forward_only`。
 
-### 6) 前缀行为（与主框架一致）
-- 管理命令（`cmd2llm ...`）遵循 AstrBot 主框架的 `wake_prefix`。
-- 执行映射时，插件会自动读取当前会话 `wake_prefix` 并拼接到目标指令。
-- 如果传入的指令本身已带前缀，插件不会重复拼接前缀。
-
 ### 4) 工具参数说明（tool_config）
 - `tool_description`：全局工具描述（统一告诉 LLM 这个插件在做什么）
 - `arg_description`：全局 args 参数说明（默认模板）
@@ -184,6 +179,11 @@
 - `migration_once_flag`：迁移完成标记
 
 > 旧版 `data/plugin_data/command_to_llm/command_mappings.json` 会在首次升级时自动迁移到官方 config。
+
+### 6) 前缀行为（与主框架一致）
+- 管理命令（`cmd2llm ...`）遵循 AstrBot 主框架的 `wake_prefix`。
+- 执行映射时，插件会自动读取当前会话 `wake_prefix` 并拼接到目标指令。
+- 如果传入的指令本身已带前缀，插件不会重复拼接前缀。
 
 ## 注意事项
 
