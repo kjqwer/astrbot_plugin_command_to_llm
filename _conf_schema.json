@@ -1,0 +1,169 @@
+{
+  "basic_config": {
+    "description": "基础行为配置",
+    "type": "object",
+    "items": {
+      "enable_plugin": {
+        "description": "启用插件",
+        "type": "bool",
+        "default": true,
+        "hint": "关闭后，已注册的动态函数将不可用，命令调用也会被拦截。"
+      },
+      "auto_refresh_on_change": {
+        "description": "映射变更后自动刷新函数",
+        "type": "bool",
+        "default": true,
+        "hint": "命令新增/删除映射后自动刷新 LLM 函数注册。"
+      },
+      "strict_validation": {
+        "description": "严格校验函数名",
+        "type": "bool",
+        "default": false,
+        "hint": "开启后，llm_function 仅允许字母、数字与下划线。"
+      }
+    }
+  },
+  "mapping_config": {
+    "description": "模块化映射配置",
+    "type": "object",
+    "items": {
+      "allow_duplicate_llm_function": {
+        "description": "允许多个指令复用同一个 LLM 函数名",
+        "type": "bool",
+        "default": true,
+        "hint": "关闭后，新增映射时会阻止重复函数名。"
+      },
+      "command_mappings": {
+        "description": "指令映射模块（支持增删改与启停）",
+        "type": "template_list",
+        "templates": {
+          "mapping_item": {
+            "name": "指令映射",
+            "hint": "将用户指令映射为可被 AI 调用的函数工具",
+            "items": {
+              "enabled": {
+                "description": "启用",
+                "type": "bool",
+                "default": true,
+                "hint": "关闭后保留配置但不注册函数。"
+              },
+              "command_name": {
+                "description": "指令名称",
+                "type": "string",
+                "default": "",
+                "hint": "示例：rmd ls（不要带前缀；命令行添加时可用 rmd--ls）"
+              },
+              "llm_function": {
+                "description": "LLM 函数名",
+                "type": "string",
+                "default": "",
+                "hint": "示例：list_reminders"
+              },
+              "description": {
+                "description": "函数描述",
+                "type": "text",
+                "default": "",
+                "hint": "用于帮助 AI 理解函数用途。"
+              },
+              "arg_description": {
+                "description": "参数说明（可选覆盖）",
+                "type": "text",
+                "default": "",
+                "hint": "告诉 AI 这个映射的 args 应该怎么写。例如：text=提醒内容 time=HH:MM。留空则使用全局参数说明。"
+              },
+              "group": {
+                "description": "分组",
+                "type": "string",
+                "default": "default",
+                "hint": "例如 reminder、tools、legacy。"
+              },
+              "aliases": {
+                "description": "别名列表",
+                "type": "list",
+                "default": [],
+                "hint": "保留字段：用于后续扩展多别名触发。"
+              },
+              "created_at": {
+                "description": "创建时间",
+                "type": "string",
+                "default": "",
+                "hint": "自动记录，不建议手动修改。"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "execution_config": {
+    "description": "执行行为",
+    "type": "object",
+    "items": {
+      "capture_timeout_sec": {
+        "description": "指令响应捕获超时（秒）",
+        "type": "int",
+        "default": 60,
+        "hint": "等待被触发命令返回消息的最长时间。"
+      },
+      "forward_interval_sec": {
+        "description": "多条消息转发间隔（秒）",
+        "type": "float",
+        "default": 0.5,
+        "hint": "避免短时间高频发送造成刷屏。"
+      },
+      "response_mode": {
+        "description": "返回模式",
+        "type": "string",
+        "default": "forward_only",
+        "options": [
+          "forward_and_text",
+          "text_only",
+          "forward_only"
+        ],
+        "hint": "推荐 forward_only：只在会话中转发，尽量避免触发额外 LLM 复述。"
+      }
+    }
+  },
+  "tool_config": {
+    "description": "LLM 工具说明",
+    "type": "object",
+    "items": {
+      "tool_description": {
+        "description": "全局工具描述",
+        "type": "text",
+        "default": "将已有指令映射为可调用函数，让 AI 能触发插件命令。",
+        "hint": "用于统一告知模型这个插件工具的能力边界。"
+      },
+      "arg_description": {
+        "description": "全局参数说明（args）",
+        "type": "text",
+        "default": "指令参数字符串。推荐 key=value 格式，多参数用空格分隔。例如：text=喝水 time=10:00。",
+        "hint": "作为所有映射的默认参数说明；单映射可在映射项中覆盖。"
+      }
+    }
+  },
+  "compat_config": {
+    "description": "兼容迁移",
+    "type": "object",
+    "items": {
+      "auto_migrate_legacy_json": {
+        "description": "自动迁移旧版 JSON 数据",
+        "type": "bool",
+        "default": true,
+        "hint": "首次启动时自动将旧文件迁移到 WebUI 配置。"
+      },
+      "keep_legacy_backup": {
+        "description": "保留旧版数据备份",
+        "type": "bool",
+        "default": true,
+        "hint": "迁移后将 command_mappings.json 重命名为 .json.bak。"
+      },
+      "migration_once_flag": {
+        "description": "迁移完成标记",
+        "type": "bool",
+        "default": false,
+        "hint": "内部状态位，一般无需手动修改。"
+      }
+    }
+  }
+}

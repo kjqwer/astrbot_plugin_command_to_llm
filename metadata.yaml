@@ -1,7 +1,7 @@
 name: command_to_llm # 插件的唯一识别名
 desc: 将指令（比如/help）转换为LLM函数（比如 get_help）调用，让AI能够通过LLM函数执行其他插件的指令，支持动态添加和管理指令映射 # 插件简短描述
 help: 输入/cmd2llm help查看帮助 # 插件的帮助信息
-version: v1.0.1 # 插件版本号
+version: v1.1.0 # 插件版本号
 author: kjqwdw # 作者
 
 repo: https://github.com/kjqwer/astrbot_plugin_command_to_llm # 插件的仓库地址 
